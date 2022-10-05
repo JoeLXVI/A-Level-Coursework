@@ -16,9 +16,9 @@
             <li><a href="">Home</a></li>
             <div class="shiftRight">
                <li class="active"><a href="signUp.php">Sign In</a></li>
-               <li><a href="#">Increase Font Size</a></li>
-               <li><a href="#">Decrease Font Size</a></li>
-               <li><a href="#">Toggle Theme</a></li>
+               <li id="increaseText"><a href="#">Increase Font Size</a></li>
+               <li id="decreaseText"><a href="#">Decrease Font Size</a></li>
+               <li id="themeToggle"><a href="#">Toggle Theme</a></li>
             </div>
          </ul>
       </nav>
