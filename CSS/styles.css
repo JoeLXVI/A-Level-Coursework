@@ -26,7 +26,7 @@ html {
    scroll-behavior: smooth;
 }
 
-/* Styling Miscellenuos Properties */
+/* Styling Miscellaneous Properties */
 *::selection {
    background-color: var(--accent);
    color: var(--background-hover);
