@@ -1,0 +1,189 @@
+/* Setting up Utility Variables */
+:root {
+   --fs-title: 2rem;
+   --fs-nav: 1rem;
+   --fs-subheadings: 1.5rem;
+   --fs-main: 1rem;
+   --fs-buttons: 1rem;
+   --fs-label: 1.25rem;
+   --fs-inputs: 1.125rem;
+}
+
+/* Creating the Light and Dark Theme Colour Schemes */
+.darkTheme {
+   --background: #211c1f;
+   --background-hover: #372f34;
+   --text: #eee5d3;
+   --nav-background: #292627;
+   --nav-background-hover: #353132;
+   --nav-text: #eee5d3;
+   --accent: #68b69d;
+   --accent-hover: #5aaf94;
+}
+
+/* Styling the Root Element to Give Desired Behaviours */
+html {
+   scroll-behavior: smooth;
+}
+
+/* Styling Miscellenuos Properties */
+*::selection {
+   background-color: var(--accent);
+   color: var(--background-hover);
+}
+
+*::-webkit-scrollbar {
+   width: 1em;
+}
+
+*::-webkit-scrollbar-track {
+   background-color: var(--nav-background);
+}
+
+*::-webkit-scrollbar-thumb {
+   background-color: var(--accent);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+   background-color: var(--accent-hover);
+}
+
+/* Styling the Body Tag */
+body {
+   background-color: var(--background);
+   display: flex;
+   flex-direction: column;
+   color: var(--text);
+   margin: 0;
+   max-width: 100vw;
+   height: 100vh;
+   overflow: hidden;
+}
+
+/* Styling the Heading and Navigation Bar */
+header {
+   margin: 0;
+   width: 100vw;
+   height: fit-content;
+   display: grid;
+   grid-template-rows: 1fr 1fr;
+   text-align: center;
+}
+
+nav {
+   width: 100vw;
+   position: fixed;
+   top: 0;
+   left: 0;
+   background-color: var(--nav-background);
+   grid-row: 1;
+}
+
+ul {
+   list-style: none;
+   padding: 0;
+   display: flex;
+   flex-direction: row;
+   margin: 0;
+   width: 100%;
+}
+
+ul .shiftRight {
+   display: flex;
+   flex-direction: row;
+   position: fixed;
+   right: 0;
+   border-left: 2px solid var(--nav-text);
+}
+
+ul li {
+   padding-inline: 16px;
+   padding-block: 14px;
+   background-color: var(--nav-background);
+   border-right: 2px solid var(--nav-text);
+}
+
+ul li a {
+   color: var(--nav-text);
+   text-decoration: none;
+   font-size: var(--fs-nav);
+}
+
+ul li.active {
+   background-color: var(--accent);
+}
+
+ul li.active a {
+   color: var(--nav-background);
+}
+
+ul li:hover {
+   background-color: var(--nav-background-hover);
+}
+
+ul li.active:hover {
+   background-color: var(--accent-hover);
+}
+
+.title {
+   grid-row: 2;
+}
+
+h1 {
+   margin: 0;
+   font-size: var(--fs-title);
+   color: var(--accent);
+}
+
+hr {
+   color: var(--accent);
+}
+
+/* Styling the Main Body of the Page */
+main {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   width: 100%;
+   height: 100%;
+}
+
+/* Styling the Sign Up, Sign In, and Validation form */
+form.UserCredentials {
+   border: 2px solid var(--text);
+   background-color: var(--background-hover);
+   display: flex;
+   flex-direction: column;
+   width: 300px;
+   gap: 15px;
+   text-align: center;
+   align-items: center;
+   padding-block: 15px;
+}
+
+form.UserCredentials label {
+   color: var(--text);
+   font-size: var(--fs-label);
+}
+
+form.UserCredentials input {
+   width: 200px;
+   height: 24px;
+   background-color: var(--background-hover);
+   border-radius: 10px;
+   border: 2px solid var(--accent);
+   color: var(--text);
+   font-size: var(--fs-inputs);
+   text-align: center;
+}
+
+form.UserCredentials button {
+   width: 200px;
+   height: 30px;
+   background-color: var(--background-hover);
+   border-radius: 10px;
+   border: 2px solid var(--accent);
+   color: var(--text);
+   font-size: var(--fs-inputs);
+}
