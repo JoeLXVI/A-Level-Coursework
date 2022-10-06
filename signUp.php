@@ -9,7 +9,7 @@
    <link rel="stylesheet" href="CSS\styles.css">
 </head>
 
-<body class="darkTheme largerFontSize">
+<body class="darkTheme normalFontSize">
    <header>
       <nav>
          <ul>
@@ -30,13 +30,13 @@
    <main>
       <form action="" class="UserCredentials">
          <label for="UserName">Enter your name</label>
-         <input type="text" name="UserName" placeholder="Name" required>
+         <input type="text" name="UserName" id="UserName" placeholder="Name" required>
          <label for="UserEmail">Enter your email address</label>
-         <input type="email" name="UserEmail" placeholder="example@email.com" required>
+         <input type="email" name="UserEmail" id="UserEmail" placeholder="example@email.com" required>
          <label for="UserPassword">Enter your password</label>
-         <input type="password" name="UserPassword" placeholder="Password" required>
-         <label for="userConfirmPassword">Confirm your password</label>
-         <input type="password" name="UserConfirmPassword" placeholder="Retype Password" required>
+         <input type="password" name="UserPassword" id="UserPassword" placeholder="Password" required>
+         <label for="UserConfirmPassword">Confirm your password</label>
+         <input type="password" name="UserConfirmPassword" id="UserConfirmPassword" placeholder="Retype Password" required>
          <button type="submit">Sign Up</button>
       </form>
    </main>

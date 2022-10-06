@@ -17,19 +17,21 @@
    --nav-background: #292627;
    --nav-background-hover: #353132;
    --nav-text: #eee5d3;
+   --nav-text-active: #211c1f;
    --accent: #68b69d;
    --accent-hover: #5aaf94;
 }
 
 .lightTheme {
    --background: #eee5d3;
-   --background-hover: #;
+   --background-hover: #e8dcc4;
    --text: #211c1f;
    --nav-background: #292627;
    --nav-background-hover: #353132;
    --nav-text: #eee5d3;
-   --accent: #68b69d;
-   --accent-hover: #5aaf94;
+   --nav-text-active: #eee5d3;
+   --accent: #22386d;
+   --accent-hover: #27417c;
 }
 
 /* Creating the classes for the Larger and Largest Font Sizes */
@@ -40,6 +42,16 @@
    --fs-main: 1.125rem;
    --fs-buttons: 1.125rem;
    --fs-label: 1.375rem;
+   --fs-inputs: 1.25rem;
+}
+
+.largestFontSize {
+   --fs-title: 2.25rem;
+   --fs-nav: 1.25rem;
+   --fs-subheadings: 1.75rem;
+   --fs-main: 1.25rem;
+   --fs-buttons: 1.25rem;
+   --fs-label: 1.5rem;
    --fs-inputs: 1.375rem;
 }
 
@@ -136,7 +148,7 @@ ul li.active {
 }
 
 ul li.active a {
-   color: var(--nav-background);
+   color: var(--nav-text-active);
 }
 
 ul li:hover {
@@ -191,7 +203,6 @@ form.UserCredentials label {
 
 form.UserCredentials input {
    width: 200px;
-   height: 24px;
    background-color: var(--background-hover);
    border-radius: 10px;
    border: 2px solid var(--accent);
@@ -204,7 +215,6 @@ form.UserCredentials input {
 
 form.UserCredentials button {
    width: 200px;
-   height: 30px;
    background-color: var(--background-hover);
    border-radius: 10px;
    border: 2px solid var(--accent);
