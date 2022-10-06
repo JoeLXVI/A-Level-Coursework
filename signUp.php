@@ -9,7 +9,7 @@
    <link rel="stylesheet" href="CSS\styles.css">
 </head>
 
-<body class="darkTheme normalFontSize">
+<body class="darkTheme largerFontSize">
    <header>
       <nav>
          <ul>

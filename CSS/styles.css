@@ -21,6 +21,28 @@
    --accent-hover: #5aaf94;
 }
 
+.lightTheme {
+   --background: #eee5d3;
+   --background-hover: #;
+   --text: #211c1f;
+   --nav-background: #292627;
+   --nav-background-hover: #353132;
+   --nav-text: #eee5d3;
+   --accent: #68b69d;
+   --accent-hover: #5aaf94;
+}
+
+/* Creating the classes for the Larger and Largest Font Sizes */
+.largerFontSize {
+   --fs-title: 2.125rem;
+   --fs-nav: 1.125rem;
+   --fs-subheadings: 1.625rem;
+   --fs-main: 1.125rem;
+   --fs-buttons: 1.125rem;
+   --fs-label: 1.375rem;
+   --fs-inputs: 1.375rem;
+}
+
 /* Styling the Root Element to Give Desired Behaviours */
 html {
    scroll-behavior: smooth;
@@ -176,6 +198,8 @@ form.UserCredentials input {
    color: var(--text);
    font-size: var(--fs-inputs);
    text-align: center;
+   padding-inline: 10px;
+   padding-block: 5px;
 }
 
 form.UserCredentials button {
@@ -186,4 +210,6 @@ form.UserCredentials button {
    border: 2px solid var(--accent);
    color: var(--text);
    font-size: var(--fs-inputs);
+   padding-inline: 10px;
+   padding-block: 5px;
 }
