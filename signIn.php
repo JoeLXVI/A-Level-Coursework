@@ -15,7 +15,7 @@
          <ul>
             <li><a href="">Home</a></li>
             <div class="shiftRight">
-               <li class="active"><a href="signIn.php">Sign In</a></li>
+               <li class="active"><a href="signIn.php">Sign In </a></li>
                <li id="increaseText"><a href="#">Increase Font Size</a></li>
                <li id="decreaseText"><a href="#">Decrease Font Size</a></li>
                <li id="themeToggle"><a href="#">Toggle Theme</a></li>
@@ -23,7 +23,7 @@
          </ul>
       </nav>
       <div class="title">
-         <h1>Sign Up</h1>
+         <h1>Sign In</h1>
          <hr>
       </div>
    </header>
@@ -31,13 +31,10 @@
       <form action="" class="UserCredentials" method="POST">
          <label for="UserName">Enter your name</label>
          <input type="text" name="UserName" id="UserName" placeholder="Name" required>
-         <label for="UserEmail">Enter your email address</label>
-         <input type="email" name="UserEmail" id="UserEmail" placeholder="example@email.com" required>
          <label for="UserPassword">Enter your password</label>
          <input type="password" name="UserPassword" id="UserPassword" placeholder="Password" required>
-         <label for="UserConfirmPassword">Confirm your password</label>
-         <input type="password" name="UserConfirmPassword" id="UserConfirmPassword" placeholder="Retype Password" required>
-         <button type="submit">Sign Up</button>
+         <button type="submit">Submit</button>
+         <a href="signUp.php" id="createAccount">Create an account</a>
       </form>
    </main>
 </body>
