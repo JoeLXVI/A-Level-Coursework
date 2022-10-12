@@ -183,6 +183,11 @@ main {
    height: 100%;
 }
 
+h2 {
+   color: var(--text);
+   font-size: var(--fs-subheadings);
+}
+
 /* Styling the Sign Up, Sign In, and Validation form */
 form.UserCredentials {
    border: 2px solid var(--text);
@@ -339,4 +344,128 @@ form.CreateFlashcard button:hover {
    grid-column: 2;
    grid-row: 3;
    display: none;
+}
+
+/* Styling the Select Set Container and Items */
+#SelectSet-Container {
+   display: flex;
+   flex-direction: row;
+   flex-wrap: wrap;
+   gap: 10px;
+   width: 80vw;
+   border: 2px solid var(--text);
+   padding-inline: 20px;
+   padding-block: 10px;
+   align-items: center;
+   justify-content: center;
+   text-align: center;
+}
+
+.SelectSet-Box {
+   width: calc((80vw - 40px) / 3);
+   background: linear-gradient(
+      to bottom right,
+      var(--background-hover),
+      var(--background)
+   );
+   border: 2px solid var(--text);
+   transition: box-shadow 0.3s ease-in;
+   font-size: var(--fs-main);
+}
+
+.SelectSet-Box:hover {
+   box-shadow: 5px 5px var(--accent);
+}
+
+/* Styling the Flashcard Viewer Container and Information Box */
+#SetViewer-Container {
+   display: flex;
+   flex-direction: row;
+   gap: 1000px;
+   margin-bottom: 35px;
+}
+
+.card {
+   width: 500px;
+   aspect-ratio: 1.6;
+   position: relative;
+}
+
+.card h3 {
+   font-size: 1.25rem;
+}
+
+.card p {
+   font-size: var(--fs-main);
+}
+
+.rotated .content {
+   transform: rotateX(180deg) translateY(-33px);
+}
+
+.content {
+   text-align: center;
+   position: relative;
+   transition: transform 2s;
+   transform-style: preserve-3d;
+   height: 100%;
+}
+
+.front,
+.back {
+   position: absolute;
+   padding-inline: 50px;
+   padding-block: 15px;
+   top: 0;
+   bottom: 0;
+   left: 0;
+   right: 0;
+   height: 100%;
+   backface-visibility: hidden;
+   transform-style: preserve-3d;
+   border: 2px solid var(--text);
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-direction: column;
+}
+
+.front {
+   background: linear-gradient(
+      to bottom right,
+      var(--background-hover),
+      var(--background)
+   );
+}
+
+.front h3 {
+   transform: translateZ(50px);
+}
+
+.front p,
+.back p {
+   transform: translateZ(25px);
+}
+
+.back {
+   transform: rotateX(180deg);
+   background: linear-gradient(
+      to bottom right,
+      var(--background-hover),
+      var(--background)
+   );
+}
+
+#SetViewer-Information {
+   width: 540px;
+   background: linear-gradient(
+      to bottom right,
+      var(--background),
+      var(--background-hover)
+   );
+   border: 2px solid var(--text);
+   color: var(--text);
+   font-size: var(--fs-main);
+   text-align: center;
+   margin-top: 10px;
 }

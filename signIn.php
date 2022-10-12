@@ -13,7 +13,7 @@
    <header>
       <nav>
          <ul>
-            <li><a href="">Home</a></li>
+            <li><a href="selectSet.php">Home</a></li>
             <div class="shiftRight">
                <li class="active"><a href="signIn.php">Sign In </a></li>
                <li id="increaseText"><a href="#">Increase Font Size</a></li>

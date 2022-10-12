@@ -13,7 +13,7 @@
    <header>
       <nav>
          <ul>
-            <li><a href="">Home</a></li>
+            <li><a href="selectSet.php">Home</a></li>
             <div class="shiftRight">
                <li class="active"><a href="signIn.php">Sign In </a></li>
                <li id="increaseText"><a href="#">Increase Font Size</a></li>
@@ -23,7 +23,7 @@
          </ul>
       </nav>
       <div class="title">
-         <h1>Sign In</h1>
+         <h1>Create a Flashcard</h1>
          <hr>
       </div>
    </header>
@@ -60,3 +60,5 @@
 
 </html>
 <script src="JavaScript\CheckBoxClicked.js"></script>
+<script src="JavaScript\ChangeFontSize.js"></script>
+<script src="JavaScript\ToggleTheme.js"></script>
