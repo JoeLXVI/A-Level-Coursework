@@ -52,3 +52,5 @@
 
 </html>
 <script src="JavaScript\RotateFlashcard.js"></script>
+<script src="JavaScript\ChangeFontSize.js"></script>
+<script src="JavaScript\ToggleTheme.js"></script>

@@ -113,7 +113,7 @@ nav {
    grid-row: 1;
 }
 
-ul {
+nav ul {
    list-style: none;
    padding: 0;
    display: flex;
@@ -122,7 +122,7 @@ ul {
    width: 100%;
 }
 
-ul .shiftRight {
+nav ul .shiftRight {
    display: flex;
    flex-direction: row;
    position: fixed;
@@ -130,32 +130,32 @@ ul .shiftRight {
    border-left: 2px solid var(--nav-text);
 }
 
-ul li {
+nav ul li {
    padding-inline: 16px;
    padding-block: 14px;
    background-color: var(--nav-background);
    border-right: 2px solid var(--nav-text);
 }
 
-ul li a {
+nav ul li a {
    color: var(--nav-text);
    text-decoration: none;
    font-size: var(--fs-nav);
 }
 
-ul li.active {
+nav ul li.active {
    background-color: var(--accent);
 }
 
-ul li.active a {
+nav ul li.active a {
    color: var(--nav-text-active);
 }
 
-ul li:hover {
+nav ul li:hover {
    background-color: var(--nav-background-hover);
 }
 
-ul li.active:hover {
+nav ul li.active:hover {
    background-color: var(--accent-hover);
 }
 
@@ -468,4 +468,77 @@ form.CreateFlashcard button:hover {
    font-size: var(--fs-main);
    text-align: center;
    margin-top: 10px;
+}
+
+/* Styling the Section for Creating Classes, Invite Students to Classes, and for Students to Join Classes */
+form.ClassCredentials {
+   border: 2px solid var(--text);
+   background-color: var(--background-hover);
+   display: flex;
+   flex-direction: column;
+   width: 400px;
+   gap: 15px;
+   text-align: center;
+   align-items: center;
+   padding-block: 15px;
+}
+
+form.ClassCredentials label {
+   color: var(--text);
+   font-size: var(--fs-label);
+}
+
+form.ClassCredentials input {
+   width: 200px;
+   background-color: var(--background-hover);
+   border-radius: 10px;
+   border: 2px solid var(--accent);
+   color: var(--text);
+   font-size: var(--fs-inputs);
+   text-align: center;
+   padding-inline: 10px;
+   padding-block: 5px;
+}
+
+form.ClassCredentials button {
+   width: 200px;
+   background-color: var(--background-hover);
+   border-radius: 10px;
+   border: 2px solid var(--accent);
+   color: var(--text);
+   font-size: var(--fs-inputs);
+   padding-inline: 10px;
+   padding-block: 5px;
+}
+
+#TeachersClasses {
+   width: 366.8px;
+   background-color: var(--background-hover);
+   text-align: center;
+   margin-bottom: 25px;
+   border: 2px solid var(--text);
+   padding-inline: 15px;
+   padding-block: 5px;
+}
+
+#TeachersClasses ul {
+   list-style: none;
+   padding: 0;
+   display: flex;
+   flex-direction: row;
+   gap: 5px;
+   margin: 0;
+   width: 100%;
+   align-items: center;
+   justify-content: center;
+   text-align: center;
+   display: flex;
+   flex-direction: row;
+   flex-wrap: wrap;
+}
+
+#TeachersClasses ul li {
+   width: 175px;
+   border: 2px solid var(--accent);
+   font-size: var(--fs-main);
 }
