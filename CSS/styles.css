@@ -239,6 +239,11 @@ form.UserCredentials button:hover {
    font-size: var(--fs-label);
 }
 
+#StudentOption input[type="radio"],
+#TeacherOption input[type="radio"] {
+   width: min-content;
+}
+
 /* Styling the form used to create flashcards */
 form.CreateFlashcard {
    max-width: 70%;

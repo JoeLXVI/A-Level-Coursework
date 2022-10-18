@@ -14,8 +14,9 @@
       <nav>
          <ul>
             <li><a href="selectSet.php">Home</a></li>
+            <li class="active"><a href="createFlashcard.php">Create a Card</a></li>
             <div class="shiftRight">
-               <li class="active"><a href="signIn.php">Sign In </a></li>
+               <li><a href="signIn.php">Sign In </a></li>
                <li id="increaseText"><a href="#">Increase Font Size</a></li>
                <li id="decreaseText"><a href="#">Decrease Font Size</a></li>
                <li id="themeToggle"><a href="#">Toggle Theme</a></li>
