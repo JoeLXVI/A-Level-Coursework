@@ -29,7 +29,7 @@
       </div>
    </header>
    <main>
-      <h2>Choose from on of the following sets</h2>
+      <h2>Choose from one of the following sets</h2>
       <div id="SelectSet-Container">
          <div class="SelectSet-Box">
             <p>Set 1</p>

@@ -70,13 +70,13 @@ require 'PHPMailer\src\SMTP.php';
          $GetUserPassword = $_POST['UserPassword'];
          $GetUserConfirmPassword = $_POST['UserConfirmPassword'];
          $GetUserAccountType = $_POST['AccountOption'];
-         $UserValidationCode = substr(str_shuffle("0123456789"), 0, 5); //Generate a 5 digit validation code
+         $UserValidationCode = substr(str_shuffle("0123456789"), 0, 5); // Generate a 5 digit validation code
          if ($GetUserPassword !== $GetUserConfirmPassword) {
             echo "Passwords do not match";
             exit;
          }
          $HashedPassword = password_hash($GetUserPassword, PASSWORD_DEFAULT);
-         //SQL Query to create the user in the database
+         // SQL Query to create the user in the database
          $sql = "INSERT INTO users (UserName, EmailAddress, UserPassword, UserType, ValidationCode) VALUES ('$GetUserName', '$GetUserEmail', '$HashedPassword', $GetUserAccountType, '$UserValidationCode')";
          if ($conn->query($sql) !== TRUE) {
             echo "Error: " . $sql . "<br>" . $conn->error;
@@ -104,10 +104,20 @@ require 'PHPMailer\src\SMTP.php';
          // Send the email and check for any errors
          if (!$mail->Send()) {
             echo "Mailer Error: " . $mail->ErrorInfo;
-         } else {
-            echo "<script>window.location.assign('validateAccount.php')</script>";
+         }
+         // Get the user ID to pass to the validation code page
+         $sql = "SELECT UserID FROM users WHERE UserName = '$GetUserName'";
+         $result = mysqli_query($conn, $sql);
+         while ($row = mysqli_fetch_assoc($result)) {
+            $UserID = $row['UserID'];
+            // Redirect the user using JavaScript
+            $URL = "validateAccount.php?uid=$UserID";
+            echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
+            // If JavaScript is not enabled this performs the same function
+            echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
          }
       }
+
       ?>
    </main>
 </body>

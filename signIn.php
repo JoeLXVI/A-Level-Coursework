@@ -1,3 +1,6 @@
+<?php
+include "conn.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -34,9 +37,34 @@
          <input type="text" name="UserName" id="UserName" placeholder="Name" required>
          <label for="UserPassword">Enter your password</label>
          <input type="password" name="UserPassword" id="UserPassword" placeholder="Password" required>
-         <button type="submit">Submit</button>
+         <button type="submit" name="SubmitForm">Submit</button>
          <a href="signUp.php" id="createAccount">Create an account</a>
       </form>
+      <?php
+      if (isset($_POST['SubmitForm'])) { // Check if the form has been submitted
+         // Retrieve the user inputs
+         $GetUserName = $_POST['UserName'];
+         $GetUserPassword = $_POST['UserPassword'];
+         $sql = "SELECT * FROM users WHERE UserName = '$GetUserName'";
+         $result = mysqli_query($conn, $sql);
+         $resultRows = mysqli_num_rows($result);
+         if ($resultRows > 0) {
+            while ($row = mysqli_fetch_assoc($result)) {
+               if (password_verify($GetUserPassword, $row['UserPassword'])) {
+                  $UserID = $row['UserID'];
+                  echo $UserID;
+                  // Redirect the user using JavaScript
+                  $URL = "selectSet.php?uid=$UserID";
+                  echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
+                  // If JavaScript is not enabled this performs the same function
+                  echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
+               } else {
+                  echo "Incorrect Name and Password Combination";
+               }
+            }
+         }
+      }
+      ?>
    </main>
 </body>
 

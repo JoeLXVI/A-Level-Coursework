@@ -1,3 +1,6 @@
+<?php
+include "conn.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -32,8 +35,31 @@
       <form action="" method="post" class="UserCredentials">
          <label for="ValidationCode">Enter your validation code</label>
          <input type="text" name="ValidationCode" id="ValdationCode" required placeholder="Validation Code">
-         <button type="submit">Submit</button>
+         <button type="submit" name="SubmitForm">Submit</button>
       </form>
+      <?php
+      if (isset($_POST['SubmitForm'])) { // Check if the form has been submitted
+         // Retrieve the user inputs
+         $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
+         $GetUserValidationCode = $_POST['ValidationCode'];
+         $sql = "SELECT ValidationCode FROM users WHERE UserID = $GetUserID";
+         $result = mysqli_query($conn, $sql);
+         while ($row = mysqli_fetch_assoc($result)) {
+            if ($GetUserValidationCode === $row['ValidationCode']) {
+               $sql = "UPDATE users SET Validated=1 WHERE UserID = $GetUserID";
+               if ($conn->query($sql) === TRUE) {
+                  $URL = "selectSet.php?uid=$GetUserID";
+                  echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
+                  echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
+               } else {
+                  echo "Error: " . $sql . "<br>" . $conn->error;
+               }
+            } else {
+               echo 'Incorrect Code';
+            }
+         }
+      }
+      ?>
    </main>
 </body>
 
