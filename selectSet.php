@@ -1,3 +1,7 @@
+<?php
+include 'conn.php';
+$GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,8 +17,8 @@
    <header>
       <nav>
          <ul>
-            <li class="active"><a href="selectSet.php">Home</a></li>
-            <li><a href="createFlashcard.php">Create a Card</a></li>
+            <li class="active"><a href="selectSet.php?uid=<?php echo $GetUserID ?>">Home</a></li>
+            <li><a href="createFlashcard.php?uid=<?php echo $GetUserID ?>">Create a Card</a></li>
             <div class="shiftRight">
                <li><a href="signIn.php">Sign In </a></li>
                <li id="increaseText"><a href="#">Increase Font Size</a></li>

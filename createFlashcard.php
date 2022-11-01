@@ -1,3 +1,7 @@
+<?php
+include 'conn.php';
+$GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,8 +17,8 @@
    <header>
       <nav>
          <ul>
-            <li><a href="selectSet.php">Home</a></li>
-            <li class="active"><a href="createFlashcard.php">Create a Card</a></li>
+            <li><a href="selectSet.php?uid=<?php echo $GetUserID ?>">Home</a></li>
+            <li class="active"><a href="createFlashcard.php?uid=<?php echo $GetUserID ?>">Create a Card</a></li>
             <div class="shiftRight">
                <li><a href="signIn.php">Sign In </a></li>
                <li id="increaseText"><a href="#">Increase Font Size</a></li>
@@ -44,18 +48,54 @@
          </div>
          <div id="CreateFlashcard-NewSet">
             <label for="NewSet">Would you like to create a new set?</label>
+            <input type="hidden" name="NewSet" value="no" />
             <input type="checkbox" name="NewSet" id="NewSet" onclick="checkboxClicked()" value="yes">
          </div>
          <div id="CreateFlashcard-SetNumber">
             <label for="SetNumber">What number set would you like to add the flashcard to?</label>
-            <input type="number" name="SetNumber" id="SetNumber" placeholder="Set Number" required>
+            <input type="number" name="SetNumber" id="SetNumber" placeholder="Set Number">
          </div>
          <div id="CreateFlashcard-SetTitle">
             <label for="SetTitle">What would you like to call the new set?</label>
-            <input type="text" name="SetTitle" id="SetTitle" placeholder="Set Name" required>
+            <input type="text" name="SetTitle" id="SetTitle" placeholder="Set Name">
          </div>
-         <button type="submit">Submit</button>
+         <button type="submit" name="SubmitForm">Submit</button>
       </form>
+      <?php
+      if (isset($_POST['SubmitForm'])) { // Check if the form has been submitted
+         // Retrieve the user inputs
+         $GetFlashcardTitle = $_POST['FlashcardTitle'];
+         $GetFlashcardFront = $_POST['FlashcardFront'];
+         $GetFlashcardBack = $_POST['FlashcardBack'];
+         if ($_POST['NewSet'] == "yes") { // Check if the user is adding to a new set
+            //Create the new set
+            $GetSetTitle = $_POST['SetTitle'];
+            $sql_createSet = "INSERT INTO sets (OwnerID, SetTitle) VALUES ($GetUserID, '$GetSetTitle')";
+            if ($conn->query($sql_createSet) !== TRUE) {
+               echo "Error: " . $sql_createSet . "<br>" . $conn->error;
+            } else { // If the set was successfully created create the card
+               $sql_getSetID = "SELECT * FROM sets WHERE SetTitle = '$GetSetTitle' AND OwnerID = $GetUserID";
+               $result = mysqli_query($conn, $sql_getSetID);
+               $resultRows = mysqli_num_rows($result);
+               if ($resultRows > 0) {
+                  while ($row = mysqli_fetch_assoc($result)) {
+                     $SetID = $row['SetID'];
+                     $sql_createCard = "INSERT INTO flashcardinfo (CardSet, CardTitle, CardFront, CardBack) VALUES ($SetID, '$GetFlashcardTitle', '$GetFlashcardFront', '$GetFlashcardBack')";
+                     if ($conn->query($sql_createCard) !== TRUE) {
+                        echo "Error: " . $sql_createSet . "<br>" . $conn->error;
+                     }
+                  }
+               }
+            }
+         } else { // Create the card and add it to the user defined set
+            $GetSetID = $_POST['SetNumber'];
+            $sql_createCard = "INSERT INTO flashcardinfo (CardSet, CardTitle, CardFront, CardBack) VALUES ($GetSetID, '$GetFlashcardTitle', '$GetFlashcardFront', '$GetFlashcardBack')";
+            if ($conn->query($sql_createCard) !== TRUE) {
+               echo "Error: " . $sql_createCard . "<br>" . $conn->error;
+            }
+         }
+      }
+      ?>
    </main>
 </body>
 
