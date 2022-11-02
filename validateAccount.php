@@ -43,12 +43,16 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
          // Retrieve the user inputs
          $GetUserValidationCode = $_POST['ValidationCode'];
          // Select the validation code of the user
-         $sql = "SELECT ValidationCode FROM users WHERE UserID = $GetUserID";
-         $result = mysqli_query($conn, $sql);
-         while ($row = mysqli_fetch_assoc($result)) { // Fetch the results of the query
-            if ($GetUserValidationCode === $row['ValidationCode']) {
-               $sql = "UPDATE users SET Validated=1 WHERE UserID = $GetUserID";
-               if ($conn->query($sql) === TRUE) { // Check if the update has gone through
+         $sql = $conn->prepare("SELECT ValidationCode FROM users WHERE UserID = ?");
+         $sql->bind_param('i', $GetUserID);
+         $sql->execute();
+         $sql->store_result();
+         $sql->bind_result($ValidationCode);
+         while ($sql->fetch()) { // Fetch the results of the query
+            if ($GetUserValidationCode === $ValidationCode) {
+               $sql = $conn->prepare("UPDATE users SET Validated=1 WHERE UserID = ?");
+               $sql->bind_param('i', $GetUserID);
+               if ($sql->execute() === TRUE) { // Check if the update has gone through
                   $URL = "selectSet.php?uid=$GetUserID";
                   // Redirect the user using JavaScript
                   echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";

@@ -47,15 +47,16 @@ include "conn.php";
          $GetUserName = $_POST['UserName'];
          $GetUserPassword = $_POST['UserPassword'];
          // Search for the user in the database
-         $sql = "SELECT * FROM users WHERE UserName = '$GetUserName'"; 
-         $result = mysqli_query($conn, $sql);
-         $resultRows = mysqli_num_rows($result);
+         $sql = $conn->prepare("SELECT UserID, UserPassword FROM users WHERE UserName = ?");
+         $sql->bind_param('s', $GetUserName);
+         $sql->execute();
+         $sql->store_result();
+         $sql->bind_result($UserID, $StoredPassword);
+         $resultRows = $sql->num_rows();
          if ($resultRows > 0) {
-            while ($row = mysqli_fetch_assoc($result)) { // Fetch the results of the query
+            while ($sql->fetch()) { // Fetch the results of the query
                // Check if the inputted password matches the stored hash
-               if (password_verify($GetUserPassword, $row['UserPassword'])) {
-                  $UserID = $row['UserID'];
-                  echo $UserID;
+               if (password_verify($GetUserPassword, $StoredPassword)) {
                   // Redirect the user using JavaScript
                   $URL = "selectSet.php?uid=$UserID";
                   echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";

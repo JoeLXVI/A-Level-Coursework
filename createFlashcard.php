@@ -68,13 +68,32 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
       if (isset($_POST['SubmitForm'])) { // Check if the form has been submitted
          // Retrieve the user inputs
          $GetFlashcardTitle = $_POST['FlashcardTitle'];
+         if (strpos($GetFlashcardTitle, "'")) { // Checking if the string contains an apostrophe
+            $pos = strpos($GetFlashcardTitle, "'");
+            $GetFlashcardTitle = substr_replace($GetFlashcardTitle, "'", $pos, 0); // Adding a second apostrophe in order to prevent strings being broken in the query
+         }
          $GetFlashcardFront = $_POST['FlashcardFront'];
+         if (strpos($GetFlashcardFront, "'")) {
+            $pos = strpos($GetFlashcardFront, "'");
+            $GetFlashcardFront = substr_replace($GetFlashcardFront, "'", $pos, 0);
+         }
          $GetFlashcardBack = $_POST['FlashcardBack'];
+         if (strpos($GetFlashcardBack, "'")) {
+            $pos = strpos($GetFlashcardBack, "'");
+            $GetFlashcardBack = substr_replace($GetFlashcardBack, "'", $pos, 0);
+         }
          if ($_POST['NewSet'] == "yes") { // Check if the user is adding to a new set
             //Create the new set
             $GetSetTitle = $_POST['SetTitle'];
-            $sql_createSet = "INSERT INTO sets (OwnerID, SetTitle) VALUES ($GetUserID, '$GetSetTitle')";
-            if ($conn->query($sql_createSet) !== TRUE) {
+            if (strpos($GetSetTitle, "'")) { // Checking if the string contains an apostrophe
+               $pos = strpos($GetSetTitle, "'");
+               $GetSetTitle = substr_replace($GetSetTitle, "'", $pos, 0); // Adding a second apostrophe in order to prevent strings being broken in the query
+            }
+            $sql_createSet = $conn->prepare("INSERT INTO sets (OwnerID, SetTitle) VALUES (?, ?)");
+            // Preparing the statement, to prevent SQL injection attacks
+            $sql_createSet->bind_param('is', $GetSetID, $GetSetTitle);
+            // Adding the parameters of the INSERT statement
+            if ($sql_createSet->execute() !== TRUE) {
                echo "Error: " . $sql_createSet . "<br>" . $conn->error;
             } else { // If the set was successfully created create the card
                $sql_getSetID = "SELECT * FROM sets WHERE SetTitle = '$GetSetTitle' AND OwnerID = $GetUserID";
@@ -83,19 +102,21 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
                if ($resultRows > 0) {
                   while ($row = mysqli_fetch_assoc($result)) {
                      $SetID = $row['SetID'];
-                     $sql_createCard = "INSERT INTO flashcardinfo (CardSet, CardTitle, CardFront, CardBack) VALUES ($SetID, '$GetFlashcardTitle', '$GetFlashcardFront', '$GetFlashcardBack')";
-                     if ($conn->query($sql_createCard) !== TRUE) {
-                        echo "Error: " . $sql_createSet . "<br>" . $conn->error;
-                     }
+                     $sql_createCard = $conn->prepare("INSERT INTO flashcardinfo (CardSet, CardTitle, CardFront, CardBack) VALUES (?, ?, ?, ?)");
+                     // Preparing the statement, to prevent SQL injection attacks
+                     $sql_createCard->bind_param('isss', $SetID, $GetFlashcardTitle, $GetFlashcardFront, $GetFlashcardBack);
+                     // Adding the parameters of the INSERT statement
+                     $sql_createCard->execute();
                   }
                }
             }
          } else { // Create the card and add it to the user defined set
             $GetSetID = $_POST['SetNumber'];
-            $sql_createCard = "INSERT INTO flashcardinfo (CardSet, CardTitle, CardFront, CardBack) VALUES ($GetSetID, '$GetFlashcardTitle', '$GetFlashcardFront', '$GetFlashcardBack')";
-            if ($conn->query($sql_createCard) !== TRUE) {
-               echo "Error: " . $sql_createCard . "<br>" . $conn->error;
-            }
+            $sql_createCard = $conn->prepare("INSERT INTO flashcardinfo (CardSet, CardTitle, CardFront, CardBack) VALUES (?, ?, ?, ?)");
+            // Preparing the statement, to prevent SQL injection attacks
+            $sql_createCard->bind_param('isss', $GetSetID, $GetFlashcardTitle, $GetFlashcardFront, $GetFlashcardBack);
+            // Adding the parameters of the INSERT statement
+            $sql_createCard->execute();
          }
       }
       ?>

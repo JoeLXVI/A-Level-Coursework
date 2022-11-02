@@ -77,44 +77,56 @@ require 'PHPMailer\src\SMTP.php';
          }
          $HashedPassword = password_hash($GetUserPassword, PASSWORD_DEFAULT);
          // SQL Query to create the user in the database
-         $sql = "INSERT INTO users (UserName, EmailAddress, UserPassword, UserType, ValidationCode) VALUES ('$GetUserName', '$GetUserEmail', '$HashedPassword', $GetUserAccountType, '$UserValidationCode')";
-         if ($conn->query($sql) !== TRUE) {
+         $sql = $conn->prepare("INSERT INTO users (UserName, EmailAddress, UserPassword, UserType, ValidationCode) VALUES (?, ?, ?, ?, ?)");
+         $sql->bind_param('sssis', $GetUserName, $GetUserEmail, $HashedPassword, $GetUserAccountType, $UserValidationCode);
+         if ($sql->execute() !== TRUE) {
             echo "Error: " . $sql . "<br>" . $conn->error;
-         }
-
-         // Code to send an email containing the validation code to the user
-         // Initiate the library
-         $mail = new PHPMailer();
-         //Set the email to SMTP 
-         $mail->IsSMTP();
-         $mail->SMTPDebug = 2;
-         $mail->SMTPAuth = true;
-         // Log in to the created Account
-         $mail->Host = "smtp.office365.com";
-         $mail->Port = 587;
-         $mail->Username = "signupcoursework@hotmail.com";
-         $mail->Password = "pcA6dftVRd5yNkG";
-         $mail->SetFrom("signupcoursework@hotmail.com");
-         // Construct the email to be sent
-         $mail->AddAddress($GetUserEmail, $GetUserName);
-         $mail->Subject = 'Your Validation Code';
-         $message = "<center>Hi " . $GetUserName . ", <br><br> Your validation code is: <br>" . $UserValidationCode . "</center>";
-         $mail->msgHTML($message);
-         $mail->From = $mail->Username;
-         // Send the email and check for any errors
-         if (!$mail->Send()) {
-            echo "Mailer Error: " . $mail->ErrorInfo;
-         }
-         // Get the user ID to pass to the validation code page
-         $sql = "SELECT UserID FROM users WHERE UserName = '$GetUserName'";
-         $result = mysqli_query($conn, $sql);
-         while ($row = mysqli_fetch_assoc($result)) {
-            $UserID = $row['UserID'];
-            // Redirect the user using JavaScript
-            $URL = "validateAccount.php?uid=$UserID";
-            echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
-            // If JavaScript is not enabled this performs the same function
-            echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
+         } else {
+            // Code to send an email containing the validation code to the user
+            // Initiate the library
+            $mail = new PHPMailer();
+            //Set the email to SMTP 
+            $mail->IsSMTP();
+            $mail->SMTPDebug = 2;
+            $mail->SMTPAuth = true;
+            // Log in to the created Account
+            $mail->Host = "smtp.office365.com";
+            $mail->Port = 587;
+            $mail->Username = "signupcoursework@hotmail.com";
+            $mail->Password = "pcA6dftVRd5yNkG";
+            $mail->SetFrom("signupcoursework@hotmail.com");
+            // Construct the email to be sent
+            $mail->AddAddress($GetUserEmail, $GetUserName);
+            $mail->Subject = 'Your Validation Code';
+            $message = "<center>Hi " . $GetUserName . ", <br><br> Your validation code is: <br>" . $UserValidationCode . "</center>";
+            $mail->msgHTML($message);
+            $mail->From = $mail->Username;
+            // Send the email and check for any errors
+            if (!$mail->Send()) {
+               echo "Mailer Error: " . $mail->ErrorInfo;
+            } else {
+               // Get the user ID to pass to the validation code page
+               $sql = $conn->prepare("SELECT UserID, UserPassword FROM users WHERE UserName = ?");
+               $sql->bind_param('s', $GetUserName);
+               $sql->execute();
+               $sql->store_result();
+               $sql->bind_result($UserID, $StoredPassword);
+               $resultRows = $sql->num_rows();
+               if ($resultRows > 0) {
+                  while ($sql->fetch()) { // Fetch the results of the query
+                     // Check if the inputted password matches the stored hash
+                     if (password_verify($GetUserPassword, $StoredPassword)) {
+                        // Redirect the user using JavaScript
+                        $URL = "selectSet.php?uid=$UserID";
+                        echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
+                        // If JavaScript is not enabled this performs the same function
+                        echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
+                     } else {
+                        echo "Incorrect Name and Password Combination";
+                     }
+                  }
+               }
+            }
          }
       }
 
