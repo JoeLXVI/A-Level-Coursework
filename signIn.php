@@ -33,6 +33,7 @@ include "conn.php";
    </header>
    <main>
       <form action="" class="UserCredentials" method="POST">
+         <!-- Form for the user to enter their login details -->
          <label for="UserName">Enter your name</label>
          <input type="text" name="UserName" id="UserName" placeholder="Name" required>
          <label for="UserPassword">Enter your password</label>
@@ -45,11 +46,13 @@ include "conn.php";
          // Retrieve the user inputs
          $GetUserName = $_POST['UserName'];
          $GetUserPassword = $_POST['UserPassword'];
-         $sql = "SELECT * FROM users WHERE UserName = '$GetUserName'";
+         // Search for the user in the database
+         $sql = "SELECT * FROM users WHERE UserName = '$GetUserName'"; 
          $result = mysqli_query($conn, $sql);
          $resultRows = mysqli_num_rows($result);
          if ($resultRows > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
+            while ($row = mysqli_fetch_assoc($result)) { // Fetch the results of the query
+               // Check if the inputted password matches the stored hash
                if (password_verify($GetUserPassword, $row['UserPassword'])) {
                   $UserID = $row['UserID'];
                   echo $UserID;

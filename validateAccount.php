@@ -1,5 +1,6 @@
 <?php
 include "conn.php";
+$GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -40,16 +41,18 @@ include "conn.php";
       <?php
       if (isset($_POST['SubmitForm'])) { // Check if the form has been submitted
          // Retrieve the user inputs
-         $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
          $GetUserValidationCode = $_POST['ValidationCode'];
+         // Select the validation code of the user
          $sql = "SELECT ValidationCode FROM users WHERE UserID = $GetUserID";
          $result = mysqli_query($conn, $sql);
-         while ($row = mysqli_fetch_assoc($result)) {
+         while ($row = mysqli_fetch_assoc($result)) { // Fetch the results of the query
             if ($GetUserValidationCode === $row['ValidationCode']) {
                $sql = "UPDATE users SET Validated=1 WHERE UserID = $GetUserID";
-               if ($conn->query($sql) === TRUE) {
+               if ($conn->query($sql) === TRUE) { // Check if the update has gone through
                   $URL = "selectSet.php?uid=$GetUserID";
+                  // Redirect the user using JavaScript
                   echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
+                  // If JavaScript is not enabled this performs the same function
                   echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
                } else {
                   echo "Error: " . $sql . "<br>" . $conn->error;

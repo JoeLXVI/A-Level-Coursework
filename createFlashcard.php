@@ -34,6 +34,9 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
    </header>
    <main>
       <form action="" method="post" class="CreateFlashcard">
+         <!-- Form allowing the user to enter all relevant information to the creation of a new flashcard -->
+         <!-- Divs are being used to wrap the label and input into effectively 'one element', 
+         which allows for the grid layout to be better utilised -->
          <div id="CreateFlashcard-FlashcardTitle">
             <label for="FlashcardTitle">Enter the flashcard title</label>
             <input type="text" name="FlashcardTitle" id="FlashcardTitle" placeholder="Flashcard Title" required>
