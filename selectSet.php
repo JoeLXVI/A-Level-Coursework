@@ -35,27 +35,21 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
    <main>
       <h2>Choose from one of the following sets</h2>
       <div id="SelectSet-Container">
-         <div class="SelectSet-Box">
-            <p>Set 1</p>
-         </div>
-         <div class="SelectSet-Box">
-            <p>Set 2</p>
-         </div>
-         <div class="SelectSet-Box">
-            <p>Set 3</p>
-         </div>
-         <div class="SelectSet-Box">
-            <p>Set 4</p>
-         </div>
-         <div class="SelectSet-Box">
-            <p>Set 5</p>
-         </div>
-         <div class="SelectSet-Box">
-            <p>Set 6</p>
-         </div>
-         <div class="SelectSet-Box">
-            <p>Set 7</p>
-         </div>
+         <?php
+         $sql = $conn->prepare("SELECT SetID, SetTitle FROM sets WHERE OwnerID = ?");
+         $sql->bind_param('i', $GetUserID);
+         $sql->execute();
+         $sql->store_result();
+         $sql->bind_result($SetID, $SetTitle);
+         $resultRows = $sql->num_rows();
+         if ($resultRows > 0) {
+            $count = 1;
+            while ($sql->fetch()) { // Fetch the results of the query
+               echo "<div class='SelectSet-Box' onclick='redirect($SetID)')><p>" . $count . " - " .  $SetTitle . "</p></div>";
+               $count += 1;
+            }
+         }
+         ?>
       </div>
    </main>
 </body>
@@ -63,3 +57,4 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
 </html>
 <script src="JavaScript\ChangeFontSize.js"></script>
 <script src="JavaScript\ToggleTheme.js"></script>
+<script src="JavaScript\SetRedirect.js"></script>
