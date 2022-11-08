@@ -62,6 +62,24 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
             <label for="SetTitle">What would you like to call the new set?</label>
             <input type="text" name="SetTitle" id="SetTitle" placeholder="Set Name">
          </div>
+         <div class="CreateFlashcards-ShowUserSets">
+            <h2 id="ShowUserSetsTitle">Your Sets</h2>
+            <div id="UserSetsContainer">
+               <?php
+               $sql = $conn->prepare("SELECT SetID, SetTitle FROM sets WHERE OwnerID = ?");
+               $sql->bind_param('i', $GetUserID);
+               $sql->execute();
+               $sql->store_result();
+               $sql->bind_result($SetID, $SetTitle);
+               $resultRows = $sql->num_rows();
+               if ($resultRows > 0) {
+                  while ($sql->fetch()) { // Fetch the results of the query
+                     echo "<p>" . $SetID . " - " .  $SetTitle . "</p>";
+                  }
+               }
+               ?>
+            </div>
+         </div>
          <button type="submit" name="SubmitForm">Submit</button>
       </form>
       <?php
@@ -91,17 +109,19 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
             }
             $sql_createSet = $conn->prepare("INSERT INTO sets (OwnerID, SetTitle) VALUES (?, ?)");
             // Preparing the statement, to prevent SQL injection attacks
-            $sql_createSet->bind_param('is', $GetSetID, $GetSetTitle);
+            $sql_createSet->bind_param('is', $GetUserID, $GetSetTitle);
             // Adding the parameters of the INSERT statement
             if ($sql_createSet->execute() !== TRUE) {
-               echo "Error: " . $sql_createSet . "<br>" . $conn->error;
+               echo "Error: " . $sql_createSet->error . "<br>" . $conn->error;
             } else { // If the set was successfully created create the card
-               $sql_getSetID = "SELECT * FROM sets WHERE SetTitle = '$GetSetTitle' AND OwnerID = $GetUserID";
-               $result = mysqli_query($conn, $sql_getSetID);
-               $resultRows = mysqli_num_rows($result);
+               $sql_getSetID = $conn->prepare("SELECT SetID FROM sets WHERE SetTitle = ? AND OwnerID = ?");
+               $sql_getSetID->bind_param('si', $GetSetTitle, $GetUserID);
+               $sql_getSetID->execute();
+               $sql_getSetID->store_result();
+               $sql_getSetID->bind_result($SetID);
+               $resultRows = $sql_getSetID->num_rows();
                if ($resultRows > 0) {
-                  while ($row = mysqli_fetch_assoc($result)) {
-                     $SetID = $row['SetID'];
+                  while ($sql_getSetID->fetch()) {
                      $sql_createCard = $conn->prepare("INSERT INTO flashcardinfo (CardSet, CardTitle, CardFront, CardBack) VALUES (?, ?, ?, ?)");
                      // Preparing the statement, to prevent SQL injection attacks
                      $sql_createCard->bind_param('isss', $SetID, $GetFlashcardTitle, $GetFlashcardFront, $GetFlashcardBack);
@@ -125,5 +145,5 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
 
 </html>
 <script src="JavaScript\CheckBoxClicked.js"></script>
-<script src="JavaScript\ChangeFontSize.js"></script>
 <script src="JavaScript\ToggleTheme.js"></script>
+<script src="JavaScript\ChangeFontSize.js"></script>

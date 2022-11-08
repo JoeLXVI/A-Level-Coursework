@@ -351,6 +351,27 @@ form.CreateFlashcard button:hover {
    display: none;
 }
 
+h2#ShowUserSetsTitle {
+   font-size: var(--fs-label);
+   text-decoration: none;
+   margin-block-end: 0;
+}
+
+#UserSetsContainer {
+   display: flex;
+   flex-direction: row;
+   flex-wrap: wrap;
+   gap: 5px;
+   align-items: center;
+   justify-content: center;
+   text-align: center;
+}
+
+#UserSetsContainer p {
+   padding-block: 2px;
+   padding-inline: 4px;
+}
+
 /* Styling the Select Set Container and Items */
 #SelectSet-Container {
    display: flex;
