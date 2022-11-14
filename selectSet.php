@@ -49,7 +49,7 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
             $count = 1;
             while ($sql->fetch()) { // Fetch the results of the query
                // Display all of the sets to the user, with a javascript function to allow them to view the specified set
-               echo "<div class='SelectSet-Box' onclick='redirect($SetID)')><p>" . $count . " - " .  $SetTitle . "</p></div>";
+               echo "<div class='SelectSet-Box' onclick='redirect($SetID, $GetUserID)')><p>" . $count . " - " .  $SetTitle . "</p></div>";
                $count += 1;
             }
          }

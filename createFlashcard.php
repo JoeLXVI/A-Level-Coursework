@@ -42,11 +42,11 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
             <input type="text" name="FlashcardTitle" id="FlashcardTitle" placeholder="Flashcard Title" required>
          </div>
          <div id="CreateFlashcard-FlashcardFront">
-            <label for="FlashcardFront">Enter the flashcard title</label>
+            <label for="FlashcardFront">Enter the flashcard front text</label>
             <textarea name="FlashcardFront" id="FlashcardFront" placeholder="Flashcard Front" required></textarea>
          </div>
          <div id="CreateFlashcard-FlashcardBack">
-            <label for="FlashcardBack">Enter the flashcard title</label>
+            <label for="FlashcardBack">Enter the flashcard back text</label>
             <textarea name="FlashcardBack" id="FlashcardBack" placeholder="Flashcard back" required></textarea>
          </div>
          <div id="CreateFlashcard-NewSet">
@@ -56,7 +56,7 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
          </div>
          <div id="CreateFlashcard-SetNumber">
             <label for="SetNumber">What number set would you like to add the flashcard to?</label>
-            <input type="number" name="SetNumber" id="SetNumber" placeholder="Set Number">
+            <input type="number" name="SetNumber" id="SetNumber" placeholder="Set Number" min="0">
          </div>
          <div id="CreateFlashcard-SetTitle">
             <label for="SetTitle">What would you like to call the new set?</label>
@@ -86,27 +86,11 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
       if (isset($_POST['SubmitForm'])) { // Check if the form has been submitted
          // Retrieve the user inputs
          $GetFlashcardTitle = $_POST['FlashcardTitle'];
-         if (strpos($GetFlashcardTitle, "'")) { // Checking if the string contains an apostrophe
-            $pos = strpos($GetFlashcardTitle, "'");
-            $GetFlashcardTitle = substr_replace($GetFlashcardTitle, "'", $pos, 0); // Adding a second apostrophe in order to prevent strings being broken in the query
-         }
          $GetFlashcardFront = $_POST['FlashcardFront'];
-         if (strpos($GetFlashcardFront, "'")) {
-            $pos = strpos($GetFlashcardFront, "'");
-            $GetFlashcardFront = substr_replace($GetFlashcardFront, "'", $pos, 0);
-         }
          $GetFlashcardBack = $_POST['FlashcardBack'];
-         if (strpos($GetFlashcardBack, "'")) {
-            $pos = strpos($GetFlashcardBack, "'");
-            $GetFlashcardBack = substr_replace($GetFlashcardBack, "'", $pos, 0);
-         }
          if ($_POST['NewSet'] == "yes") { // Check if the user is adding to a new set
             //Create the new set
-            $GetSetTitle = $_POST['SetTitle'];
-            if (strpos($GetSetTitle, "'")) { // Checking if the string contains an apostrophe
-               $pos = strpos($GetSetTitle, "'");
-               $GetSetTitle = substr_replace($GetSetTitle, "'", $pos, 0); // Adding a second apostrophe in order to prevent strings being broken in the query
-            }
+            $GetSetTitle = $_POST['SetTitle']; #
             $sql_createSet = $conn->prepare("INSERT INTO sets (OwnerID, SetTitle) VALUES (?, ?)");
             // Preparing the statement, to prevent SQL injection attacks
             $sql_createSet->bind_param('is', $GetUserID, $GetSetTitle);

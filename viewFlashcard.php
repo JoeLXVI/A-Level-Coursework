@@ -1,3 +1,8 @@
+<?php
+include 'conn.php';
+$GetSetID = $_GET['sid']; // Using the GET method to retrieve form the URL
+$GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,8 +18,8 @@
    <header>
       <nav>
          <ul>
-            <li><a href="selectSet.php">Home</a></li>
-            <li><a href="createFlashcard.php">Create a Card</a></li>
+            <li class="active"><a href="selectSet.php?uid=<?php echo $GetUserID ?>">Home</a></li>
+            <li><a href="createFlashcard.php?uid=<?php echo $GetUserID ?>">Create a Card</a></li>
             <div class="shiftRight">
                <li><a href="signIn.php">Sign In </a></li>
                <li id="increaseText"><a href="#">Increase Font Size</a></li>
@@ -28,21 +33,36 @@
          <hr>
       </div>
    </header>
-   <main>
-      <h2>Set Title</h2> <!-- The text of this element will be taken from the database, via php -->
+   <main style="position: relative;">
+      <h2 style="position: absolute; top:41px;">
+         <?php
+         $sql_GetSetTitle = $conn->prepare("SELECT SetTitle FROM sets WHERE SetID = ?");
+         $sql_GetSetTitle->bind_param('i', $GetSetID);
+         $sql_GetSetTitle->execute();
+         $sql_GetSetTitle->store_result();
+         $sql_GetSetTitle->bind_result($SetTitle);
+         $resultRows = $sql_GetSetTitle->num_rows();
+         if ($resultRows > 0) {
+            while ($sql_GetSetTitle->fetch()) {
+               echo $SetTitle;
+            }
+         }
+         ?>
+      </h2>
       <div id="SetViewer-Container">
-         <!-- The following will be replaced with php that will create the same HTML, but with text loaded from the database -->
-         <div class="card unrotated" onclick="rotate(this)">
-            <div class="content">
-               <div class="front">
-                  <h3>Example Card</h3>
-                  <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Porro, nihil?</p>
-               </div>
-               <div class="back">
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Neque exercitationem architecto reiciendis error iste placeat qui. Blanditiis quod aperiam cum!</p>
-               </div>
-            </div>
-         </div>
+         <?php
+         $sql_GetCards = $conn->prepare("SELECT CardTitle, CardFront, CardBack FROM flashcardinfo WHERE CardSet = ?");
+         $sql_GetCards->bind_param('i', $GetSetID);
+         $sql_GetCards->execute();
+         $sql_GetCards->store_result();
+         $sql_GetCards->bind_result($CardTitle, $CardFront, $CardBack);
+         $resultRows = $sql_GetCards->num_rows();
+         if ($resultRows > 0) {
+            while ($sql_GetCards->fetch()) {
+               echo "<div class='card unrotated' onclick='rotate(this)'><div class='content'><div class='front'><h3>" . $CardTitle . "</h3><p>" . $CardFront . "</p></div><div class='back'><p>" . $CardBack . "</p></div></div></div>";
+            }
+         }
+         ?>
       </div>
       <div id="SetViewer-Information">
          <p><b>Click</b> on the card to flip it</p>
@@ -55,3 +75,11 @@
 <script src="JavaScript\RotateFlashcard.js"></script>
 <script src="JavaScript\ChangeFontSize.js"></script>
 <script src="JavaScript\ToggleTheme.js"></script>
+<script src="JavaScript\ChangeCard.js"></script>
+<script>
+   var maxCardPHP = <?php echo json_encode($resultRows); ?>;
+   localStorage.setItem('maxCard', maxCardPHP.toString());
+   localStorage.setItem('currentCard', '1')
+   localStorage.setItem("moveLeft", "no");
+   localStorage.setItem("moveRight", "yes");
+</script>

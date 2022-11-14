@@ -91,7 +91,8 @@ body {
    margin: 0;
    max-width: 100vw;
    height: 100vh;
-   overflow: scroll;
+   overflow-y: scroll;
+   overflow-x: hidden;
 }
 
 /* Styling the Heading and Navigation Bar */
@@ -405,10 +406,14 @@ h2#ShowUserSetsTitle {
 
 /* Styling the Flashcard Viewer Container and Information Box */
 #SetViewer-Container {
+   position: absolute;
+   left: calc(50% - 250px);
+   top: 108px;
    display: flex;
    flex-direction: row;
    gap: 1000px;
    margin-bottom: 35px;
+   transition: transform 2s;
 }
 
 .card {
@@ -494,6 +499,8 @@ h2#ShowUserSetsTitle {
    font-size: var(--fs-main);
    text-align: center;
    margin-top: 10px;
+   position: absolute;
+   top: 466px;
 }
 
 /* Styling the Section for Creating Classes, Invite Students to Classes, and for Students to Join Classes */
