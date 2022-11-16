@@ -17,8 +17,27 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
    <header>
       <nav>
          <ul>
+            <!-- The anchor elements containing php in the href allow for the user to be redirected with their ID in the URl -->
+            <!-- This means that the user is recognised throughout the entire website and can see the sets linked to them -->
             <li><a href="selectSet.php?uid=<?php echo $GetUserID ?>">Home</a></li>
             <li class="active"><a href="createFlashcard.php?uid=<?php echo $GetUserID ?>">Create a Card</a></li>
+            <?php
+            // PHP to give teachers access to the pages relating to the creation of classes as well as inviting students to classes
+            $sql_GetAccountType = $conn->prepare("SELECT UserType FROM users WHERE UserID = ?");
+            $sql_GetAccountType->bind_param('i', $GetUserID);
+            $sql_GetAccountType->execute();
+            $sql_GetAccountType->store_result();
+            $sql_GetAccountType->bind_result($UserType);
+            $resultRows = $sql_GetAccountType->num_rows();
+            if ($resultRows > 0) {
+               while ($sql_GetAccountType->fetch()) { // Fetch the results of the query
+                  if ($UserType >= 2) {
+                     echo "<li><a href='createClass.php?uid=" . $GetUserID . "'>Create a Class</a></li>";
+                     echo "<li><a href='inviteStudent.php?uid=" . $GetUserID . "'>Invite Student to a Class</a></li>";
+                  }
+               }
+            }
+            ?>
             <div class="shiftRight">
                <li><a href="signIn.php">Sign In </a></li>
                <li id="increaseText"><a href="#">Increase Font Size</a></li>
@@ -54,18 +73,12 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
             <input type="hidden" name="NewSet" value="no" />
             <input type="checkbox" name="NewSet" id="NewSet" onclick="checkboxClicked()" value="yes">
          </div>
-         <div id="CreateFlashcard-SetNumber">
-            <label for="SetNumber">What number set would you like to add the flashcard to?</label>
-            <input type="number" name="SetNumber" id="SetNumber" placeholder="Set Number" min="0">
-         </div>
-         <div id="CreateFlashcard-SetTitle">
-            <label for="SetTitle">What would you like to call the new set?</label>
-            <input type="text" name="SetTitle" id="SetTitle" placeholder="Set Name">
-         </div>
-         <div class="CreateFlashcards-ShowUserSets">
-            <h2 id="ShowUserSetsTitle">Your Sets</h2>
-            <div id="UserSetsContainer">
+         <div id="CreateFlashcard-CardSet">
+            <label for="CardSet">Which set would you like to add the card to?</label>
+            <br>
+            <select name="CardSet" id="CardSet">
                <?php
+               // Get and store all of the users sets
                $sql = $conn->prepare("SELECT SetID, SetTitle FROM sets WHERE OwnerID = ?");
                $sql->bind_param('i', $GetUserID);
                $sql->execute();
@@ -74,11 +87,16 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
                $resultRows = $sql->num_rows();
                if ($resultRows > 0) {
                   while ($sql->fetch()) { // Fetch the results of the query
-                     echo "<p>" . $SetID . " - " .  $SetTitle . "</p>";
+                     // Put the user's sets as options in the '<select>' element
+                     echo "<option value='" . $SetID . "'>" . $SetTitle . "</option>";
                   }
                }
                ?>
-            </div>
+            </select>
+         </div>
+         <div id="CreateFlashcard-SetTitle">
+            <label for="SetTitle">What would you like to call the new set?</label>
+            <input type="text" name="SetTitle" id="SetTitle" placeholder="Set Name">
          </div>
          <button type="submit" name="SubmitForm">Submit</button>
       </form>
@@ -115,7 +133,7 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
                }
             }
          } else { // Create the card and add it to the user defined set
-            $GetSetID = $_POST['SetNumber'];
+            $GetSetID = $_POST['CardSet'];
             $sql_createCard = $conn->prepare("INSERT INTO flashcardinfo (CardSet, CardTitle, CardFront, CardBack) VALUES (?, ?, ?, ?)");
             // Preparing the statement, to prevent SQL injection attacks
             $sql_createCard->bind_param('isss', $GetSetID, $GetFlashcardTitle, $GetFlashcardFront, $GetFlashcardBack);

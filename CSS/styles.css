@@ -247,7 +247,7 @@ form.UserCredentials button:hover {
 
 /* Styling the form used to create flashcards */
 form.CreateFlashcard {
-   max-width: 70%;
+   width: 70%;
    overflow: scroll;
    background-color: var(--background-hover);
    border: 2px solid var(--text);
@@ -267,7 +267,8 @@ form.CreateFlashcard label {
    font-size: var(--fs-label);
 }
 
-form.CreateFlashcard input {
+form.CreateFlashcard input,
+form.CreateFlashcard select {
    width: 45%;
    background-color: var(--background-hover);
    border-radius: 10px;
@@ -340,7 +341,7 @@ form.CreateFlashcard button:hover {
    justify-content: center;
 }
 
-#CreateFlashcard-SetNumber {
+#CreateFlashcard-CardSet {
    grid-column: 2;
    grid-row: 2;
    display: block;
@@ -521,7 +522,8 @@ form.ClassCredentials label {
    font-size: var(--fs-label);
 }
 
-form.ClassCredentials input {
+form.ClassCredentials input,
+form.ClassCredentials select {
    width: 200px;
    background-color: var(--background-hover);
    border-radius: 10px;
@@ -542,36 +544,4 @@ form.ClassCredentials button {
    font-size: var(--fs-inputs);
    padding-inline: 10px;
    padding-block: 5px;
-}
-
-#TeachersClasses {
-   width: 366.8px;
-   background-color: var(--background-hover);
-   text-align: center;
-   margin-bottom: 25px;
-   border: 2px solid var(--text);
-   padding-inline: 15px;
-   padding-block: 5px;
-}
-
-#TeachersClasses ul {
-   list-style: none;
-   padding: 0;
-   display: flex;
-   flex-direction: row;
-   gap: 5px;
-   margin: 0;
-   width: 100%;
-   align-items: center;
-   justify-content: center;
-   text-align: center;
-   display: flex;
-   flex-direction: row;
-   flex-wrap: wrap;
-}
-
-#TeachersClasses ul li {
-   width: 175px;
-   border: 2px solid var(--accent);
-   font-size: var(--fs-main);
 }

@@ -50,7 +50,7 @@ require 'PHPMailer\src\SMTP.php';
          <label for="UserConfirmPassword">Confirm your password</label>
          <input type="password" name="UserConfirmPassword" id="UserConfirmPassword" placeholder="Retype Password" required>
          <div id="AccountType-Option">
-            <label for="">Are you a student or teacher?</label>
+            <label for="AccountOption">Are you a student or teacher?</label>
             <div id="StudentOption">
                <input type="radio" name="AccountOption" id="AccountOption" value="1">
                <label for="">Student</label>
@@ -93,7 +93,7 @@ require 'PHPMailer\src\SMTP.php';
             $mail->Host = "smtp.office365.com";
             $mail->Port = 587;
             $mail->Username = "signupcoursework@hotmail.com";
-            $mail->Password = "pcA6dftVRd5yNkG";
+            $mail->Password = "CourseworkSignUp";
             $mail->SetFrom("signupcoursework@hotmail.com");
             // Construct the email to be sent
             $mail->AddAddress($GetUserEmail, $GetUserName);
@@ -114,21 +114,16 @@ require 'PHPMailer\src\SMTP.php';
                $resultRows = $sql->num_rows();
                if ($resultRows > 0) {
                   while ($sql->fetch()) { // Fetch the results of the query
-                     // Check if the inputted password matches the stored hash
-                     if (password_verify($GetUserPassword, $StoredPassword)) {
-                        // Redirect the user using JavaScript
-                        $URL = "selectSet.php?uid=$UserID";
-                        echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
-                        // If JavaScript is not enabled this performs the same function
-                        echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
-                     } else {
-                        echo "Incorrect Name and Password Combination";
-                     }
+                     $URL = "selectSet.php?uid=$UserID";
+                     echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
+                     // If JavaScript is not enabled this performs the same function
+                     echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
                   }
                }
             }
          }
       }
+
 
       ?>
    </main>

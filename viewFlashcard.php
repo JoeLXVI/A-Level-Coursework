@@ -18,8 +18,27 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
    <header>
       <nav>
          <ul>
-            <li class="active"><a href="selectSet.php?uid=<?php echo $GetUserID ?>">Home</a></li>
-            <li><a href="createFlashcard.php?uid=<?php echo $GetUserID ?>">Create a Card</a></li>
+            <!-- The anchor elements containing php in the href allow for the user to be redirected with their ID in the URl -->
+            <!-- This means that the user is recognised throughout the entire website and can see the sets linked to them -->
+            <li><a href="selectSet.php?uid=<?php echo $GetUserID ?>">Home</a></li>
+            <li class="active"><a href="createFlashcard.php?uid=<?php echo $GetUserID ?>">Create a Card</a></li>
+            <?php
+            // PHP to give teachers access to the pages relating to the creation of classes as well as inviting students to classes
+            $sql_GetAccountType = $conn->prepare("SELECT UserType FROM users WHERE UserID = ?");
+            $sql_GetAccountType->bind_param('i', $GetUserID);
+            $sql_GetAccountType->execute();
+            $sql_GetAccountType->store_result();
+            $sql_GetAccountType->bind_result($UserType);
+            $resultRows = $sql_GetAccountType->num_rows();
+            if ($resultRows > 0) {
+               while ($sql_GetAccountType->fetch()) { // Fetch the results of the query
+                  if ($UserType >= 2) {
+                     echo "<li><a href='createClass.php?uid=" . $GetUserID . "'>Create a Class</a></li>";
+                     echo "<li><a href='inviteStudent.php?uid=" . $GetUserID . "'>Invite Student to a Class</a></li>";
+                  }
+               }
+            }
+            ?>
             <div class="shiftRight">
                <li><a href="signIn.php">Sign In </a></li>
                <li id="increaseText"><a href="#">Increase Font Size</a></li>
@@ -33,7 +52,9 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
          <hr>
       </div>
    </header>
+   <!-- Using inline styling as these properties are only needed on this page -->
    <main style="position: relative;">
+      <!-- Using inline styling as these properties are only needed on this page -->
       <h2 style="position: absolute; top:41px;">
          <?php
          $sql_GetSetTitle = $conn->prepare("SELECT SetTitle FROM sets WHERE SetID = ?");
@@ -51,6 +72,7 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
       </h2>
       <div id="SetViewer-Container">
          <?php
+         // Select and store all of the flashcards in the set
          $sql_GetCards = $conn->prepare("SELECT CardTitle, CardFront, CardBack FROM flashcardinfo WHERE CardSet = ?");
          $sql_GetCards->bind_param('i', $GetSetID);
          $sql_GetCards->execute();
@@ -59,6 +81,7 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
          $resultRows = $sql_GetCards->num_rows();
          if ($resultRows > 0) {
             while ($sql_GetCards->fetch()) {
+               // Displaying all of the flashcards in the set
                echo "<div class='card unrotated' onclick='rotate(this)'><div class='content'><div class='front'><h3>" . $CardTitle . "</h3><p>" . $CardFront . "</p></div><div class='back'><p>" . $CardBack . "</p></div></div></div>";
             }
          }

@@ -1,6 +1,6 @@
 function checkboxClicked() {
    var checkbox = document.getElementById("NewSet");
-   var setNumber = document.getElementById("CreateFlashcard-SetNumber");
+   var setNumber = document.getElementById("CreateFlashcard-CardSet");
    var setTitle = document.getElementById("CreateFlashcard-SetTitle");
 
    if (checkbox.checked === true) {
