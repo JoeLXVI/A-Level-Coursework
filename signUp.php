@@ -71,17 +71,25 @@ require 'PHPMailer\src\SMTP.php';
          $GetUserConfirmPassword = $_POST['UserConfirmPassword'];
          $GetUserAccountType = $_POST['AccountOption'];
          $UserValidationCode = substr(str_shuffle("0123456789"), 0, 5); // Generate a 5 digit validation code
+         // Check the Password and Confirm Password inputs match
          if ($GetUserPassword !== $GetUserConfirmPassword) {
             echo "Passwords do not match";
             exit;
          }
          $HashedPassword = password_hash($GetUserPassword, PASSWORD_DEFAULT);
-         // SQL Query to create the user in the database
-         $sql = $conn->prepare("INSERT INTO users (UserName, EmailAddress, UserPassword, UserType, ValidationCode) VALUES (?, ?, ?, ?, ?)");
-         $sql->bind_param('sssis', $GetUserName, $GetUserEmail, $HashedPassword, $GetUserAccountType, $UserValidationCode);
-         if ($sql->execute() !== TRUE) {
-            echo "Error: " . $sql . "<br>" . $conn->error;
-         } else {
+         try {
+            // SQL Query to create the user in the database
+            $sql_CreateUser = $conn->prepare("INSERT INTO users (UserName, EmailAddress, UserPassword, UserType, ValidationCode) VALUES (?, ?, ?, ?, ?)");
+            $sql_CreateUser->bind_param('sssis', $GetUserName, $GetUserEmail, $HashedPassword, $GetUserAccountType, $UserValidationCode);
+            if ($sql_CreateUser->execute() !== TRUE) {
+               if (strpos($sql_CreateUser->error, 'Duplicate entry') !== false) {
+                  throw new Exception('Email address already registered');
+               }
+            }
+         } catch (Exception $e) {
+            echo 'Email address already registered';
+            exit;
+         } finally {
             // Code to send an email containing the validation code to the user
             // Initiate the library
             $mail = new PHPMailer();
@@ -104,27 +112,24 @@ require 'PHPMailer\src\SMTP.php';
             // Send the email and check for any errors
             if (!$mail->Send()) {
                echo "Mailer Error: " . $mail->ErrorInfo;
-            } else {
-               // Get the user ID to pass to the validation code page
-               $sql = $conn->prepare("SELECT UserID, UserPassword FROM users WHERE UserName = ?");
-               $sql->bind_param('s', $GetUserName);
-               $sql->execute();
-               $sql->store_result();
-               $sql->bind_result($UserID, $StoredPassword);
-               $resultRows = $sql->num_rows();
-               if ($resultRows > 0) {
-                  while ($sql->fetch()) { // Fetch the results of the query
-                     $URL = "selectSet.php?uid=$UserID";
-                     echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
-                     // If JavaScript is not enabled this performs the same function
-                     echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
-                  }
+            }
+            // Get the user ID to pass to the validation code page
+            $sql = $conn->prepare("SELECT UserID, UserPassword FROM users WHERE UserName = ?");
+            $sql->bind_param('s', $GetUserName);
+            $sql->execute();
+            $sql->store_result();
+            $sql->bind_result($UserID, $StoredPassword);
+            $resultRows = $sql->num_rows();
+            if ($resultRows > 0) {
+               while ($sql->fetch()) { // Fetch the results of the query
+                  $URL = "validateAccount.php?uid=$UserID";
+                  echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
+                  // If JavaScript is not enabled this performs the same function
+                  echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
                }
             }
          }
       }
-
-
       ?>
    </main>
 </body>

@@ -20,7 +20,7 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
             <!-- The anchor elements containing php in the href allow for the user to be redirected with their ID in the URl -->
             <!-- This means that the user is recognised throughout the entire website and can see the sets linked to them -->
             <li><a href="selectSet.php?uid=<?php echo $GetUserID ?>">Home</a></li>
-            <li class="active"><a href="createFlashcard.php?uid=<?php echo $GetUserID ?>">Create a Card</a></li>
+            <li><a href="createFlashcard.php?uid=<?php echo $GetUserID ?>">Create a Card</a></li>
             <?php
             // PHP to give teachers access to the pages relating to the creation of classes as well as inviting students to classes
             $sql_GetAccountType = $conn->prepare("SELECT UserType FROM users WHERE UserID = ?");
@@ -32,7 +32,7 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
             if ($resultRows > 0) {
                while ($sql_GetAccountType->fetch()) { // Fetch the results of the query
                   if ($UserType >= 2) {
-                     echo "<li><a href='createClass.php?uid=" . $GetUserID . "'>Create a Class</a></li>";
+                     echo "<li class='active'><a href='createClass.php?uid=" . $GetUserID . "'>Create a Class</a></li>";
                      echo "<li><a href='inviteStudent.php?uid=" . $GetUserID . "'>Invite Student to a Class</a></li>";
                   }
                }
@@ -53,13 +53,43 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
    </header>
    <main>
       <!-- Form for teachers to create a class -->
-      <form action="" class="ClassCredentials">
+      <form action="" class="ClassCredentials" method="POST">
          <label for="ClassName">What would you like to call the class?</label>
          <input type="text" id="ClassName" name="ClassName" placeholder="Class Name" required>
          <label for="ClassSubject">What subject is the class for?</label>
          <input type="text" id="ClassSubject" name="ClassSubject" placeholder="Subject" required>
-         <button type="submit">Submit</button>
+         <button type="submit" name="SubmitForm">Submit</button>
       </form>
+      <?php
+      if (isset($_POST['SubmitForm'])) { // Check if the form has been submitted
+         // Retrieve the user inputs
+         if ($UserType === 2) {
+            $GetClassName = $_POST['ClassName'];
+            $GetClassSubject = $_POST['ClassSubject'];
+            // Generate a 7 character class code
+            $CreateClassCode = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyz"), 0, 7);
+            try {
+               $sql_CreateClass = $conn->prepare("INSERT INTO classinfo (ClassTeacher, ClassName, ClassSubject, ClassCode) VALUES (?, ?, ?, ?)");
+               $sql_CreateClass->bind_param('isss', $GetUserID, $GetClassName, $GetClassSubject, $CreateClassCode);
+               if ($sql_CreateClass->execute() !== TRUE) {
+                  if (strpos($sql_CreateClass->error, 'Duplicate error')) {
+                     throw new Exception('Duplicate class code');
+                  }
+               }
+            } catch (Exception $e) {
+               $CreateNewClassCode = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyz"), 0, 7);
+               if ($CreateClassCode !== $CreateNewClassCode) {
+               }
+               $TestClassCode = "1234567";
+               $sql_CreateClass = $conn->prepare("INSERT INTO classinfo (ClassTeacher, ClassName, ClassSubject, ClassCode) VALUES (?, ?, ?, ?)");
+               $sql_CreateClass->bind_param('isss', $GetUserID, $GetClassName, $GetClassSubject, $CreateNewClassCode);
+               if ($sql_CreateClass->execute() !== TRUE) {
+                  echo "Error: " . $sql_CreateClass->error . "<br>" . $conn->error;
+               }
+            }
+         }
+      }
+      ?>
    </main>
 </body>
 

@@ -98,6 +98,38 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
             <label for="SetTitle">What would you like to call the new set?</label>
             <input type="text" name="SetTitle" id="SetTitle" placeholder="Set Name">
          </div>
+         <div id="CreateFlashcard-TeacherClasses">
+            <?php
+            // PHP to allow teachers to see their classes
+            $sql_GetAccountType = $conn->prepare("SELECT UserType FROM users WHERE UserID = ?");
+            $sql_GetAccountType->bind_param('i', $GetUserID);
+            $sql_GetAccountType->execute();
+            $sql_GetAccountType->store_result();
+            $sql_GetAccountType->bind_result($UserType);
+            $resultRows = $sql_GetAccountType->num_rows();
+            if ($resultRows > 0) {
+               while ($sql_GetAccountType->fetch()) { // Fetch the results of the query
+                  if ($UserType >= 2) {
+                     echo "<label for='SetClass'>What class would you like to add the set to?</label><select name='SetClass' id='SetClass'><option value=''>----</option>";
+                     // Get and store all of the teachers classes
+                     $sql = $conn->prepare("SELECT ClassID, ClassName FROM classinfo WHERE ClassTeacher = ?");
+                     $sql->bind_param('i', $GetUserID);
+                     $sql->execute();
+                     $sql->store_result();
+                     $sql->bind_result($ClassCard, $ClassName);
+                     $resultRows = $sql->num_rows();
+                     if ($resultRows > 0) {
+                        while ($sql->fetch()) { // Fetch the results of the query
+                           // Put the user's sets as options in the '<select>' element
+                           echo "<option value='" . $ClassCard . "'>" . $ClassName . "</option>";
+                        }
+                     }
+                  }
+                  echo "</select>";
+               }
+            }
+            ?>
+         </div>
          <button type="submit" name="SubmitForm">Submit</button>
       </form>
       <?php
@@ -129,6 +161,13 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
                      $sql_createCard->bind_param('isss', $SetID, $GetFlashcardTitle, $GetFlashcardFront, $GetFlashcardBack);
                      // Adding the parameters of the INSERT statement
                      $sql_createCard->execute();
+                     // Add the set to the class if one is selected
+                     if ($_POST['SetClass'] !== "") {
+                        $ClassID = $_POST['SetClass'];
+                        $sql_AddSetToClass = $conn->prepare("INSERT INTO classsets (ClassID, SetID) VALUES (?, ?)");
+                        $sql_AddSetToClass->bind_param('ii', $ClassID, $SetID);
+                        $sql_AddSetToClass->execute();
+                     }
                   }
                }
             }

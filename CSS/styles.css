@@ -353,6 +353,12 @@ form.CreateFlashcard button:hover {
    display: none;
 }
 
+#CreateFlashcard-TeacherClasses {
+   grid-column: 2;
+   grid-row: 3;
+   display: none;
+}
+
 h2#ShowUserSetsTitle {
    font-size: var(--fs-label);
    text-decoration: none;
