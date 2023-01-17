@@ -19,7 +19,7 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
          <ul>
             <!-- The anchor elements containing php in the href allow for the user to be redirected with their ID in the URl -->
             <!-- This means that the user is recognised throughout the entire website and can see the sets linked to them -->
-            <li class="active"><a href="selectSet.php?uid=<?php echo $GetUserID ?>">Home</a></li>
+            <li class="active"><a href="selectSet.php?uid=<?php echo $GetUserID ?>">Select a Set</a></li>
             <li><a href="createFlashcard.php?uid=<?php echo $GetUserID ?>">Create a Card</a></li>
             <?php
             // PHP to give teachers access to the pages relating to the creation of classes as well as inviting students to classes
@@ -34,12 +34,13 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
                   if ($UserType >= 2) {
                      echo "<li><a href='createClass.php?uid=" . $GetUserID . "'>Create a Class</a></li>";
                      echo "<li><a href='inviteStudent.php?uid=" . $GetUserID . "'>Invite Student to a Class</a></li>";
+                  } else {
+                     echo "<li><a href='joinClass.php?uid=" . $GetUserID . "'>Join a Class</a></li>";
                   }
                }
             }
             ?>
             <div class="shiftRight">
-               <li><a href="signIn.php">Sign In </a></li>
                <li id="increaseText"><a href="#">Increase Font Size</a></li>
                <li id="decreaseText"><a href="#">Decrease Font Size</a></li>
                <li id="themeToggle"><a href="#">Toggle Theme</a></li>

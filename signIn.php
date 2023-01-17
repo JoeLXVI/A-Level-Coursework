@@ -16,7 +16,7 @@ include "conn.php";
    <header>
       <nav>
          <ul>
-            <li><a href="selectSet.php">Home</a></li>
+            <li><a href="selectSet.php">Select a Set</a></li>
             <li><a href="createFlashcard.php">Create a Card</a></li>
             <div class="shiftRight">
                <li class="active"><a href="signIn.php">Sign In </a></li>

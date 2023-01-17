@@ -19,8 +19,9 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
          <ul>
             <!-- The anchor elements containing php in the href allow for the user to be redirected with their ID in the URl
             This means that the user is recognised throughout the entire website and can see the sets linked to them -->
-            <li><a href="selectSet.php?uid=<?php echo $GetUserID ?>">Home</a></li>
-            <li class="active"><a href="createFlashcard.php?uid=<?php echo $GetUserID ?>">Create a Card</a></li>
+            <li><a href="selectSet.php?uid=<?php echo $GetUserID ?>">Select a Set</a></li>
+            <li><a href="createFlashcard.php?uid=<?php echo $GetUserID ?>">Create a Card</a></li>
+            <li class="active"><a href='joinClass.php?uid=<?php echo $GetUserID ?>'>Join a Class</a></li>
             <?php
             // PHP to give teachers access to the pages relating to the creation of classes as well as inviting students to classes
             $sql_GetAccountType = $conn->prepare("SELECT UserType FROM users WHERE UserID = ?");
@@ -39,7 +40,6 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
             }
             ?>
             <div class="shiftRight">
-               <li><a href="signIn.php">Sign In </a></li>
                <li id="increaseText"><a href="#">Increase Font Size</a></li>
                <li id="decreaseText"><a href="#">Decrease Font Size</a></li>
                <li id="themeToggle"><a href="#">Toggle Theme</a></li>
@@ -63,11 +63,11 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
          // Retrieve the user inputs
          $GetClassCode = $_POST['ClassCode'];
          // SQL to get the class ID if the code entered
-         $sql_GetClassInfo = $conn->prepare("SELECT ClassID FROM classinfo WHERE ClassCode = ?");
+         $sql_GetClassInfo = $conn->prepare("SELECT ClassID, ClassName FROM classinfo WHERE ClassCode = ?");
          $sql_GetClassInfo->bind_param('s', $GetClassCode);
          $sql_GetClassInfo->execute();
          $sql_GetClassInfo->store_result();
-         $sql_GetClassInfo->bind_result($ClassID);
+         $sql_GetClassInfo->bind_result($ClassID, $GetClassName);
          $resultRows = $sql_GetClassInfo->num_rows();
          if ($resultRows > 0) {
             while ($sql_GetClassInfo->fetch()) { // Fetch the results of the query
@@ -76,6 +76,7 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
                if ($sql_AddStudentToClass->execute() !== TRUE) {
                   echo "Error: " . $sql_AddStudentToClass->error . "<br>" . $conn->error;
                } else {
+                  echo "<script type='text/javascript'>alert('You have successfully joined: " . $GetClassName . "');</script>";
                }
             }
          }
