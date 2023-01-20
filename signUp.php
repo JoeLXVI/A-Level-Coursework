@@ -40,7 +40,7 @@ require 'PHPMailer\src\SMTP.php';
    </header>
    <main>
       <form action="" class="UserCredentials" method="POST">
-         <!-- Form for the user to enter their desired account details -->
+         <!-- Form for the user to enter their account details -->
          <label for="UserName">Enter your name</label>
          <input type="text" name="UserName" id="UserName" placeholder="Name" required>
          <label for="UserEmail">Enter your email address</label>

@@ -58,13 +58,16 @@ require 'PHPMailer\src\SMTP.php';
       </div>
    </header>
    <main>
+      <!-- Form to allow teachers to enter the email address of the student they wish to invite to the class -->
       <form action="" class="ClassCredentials" method="POST">
          <label for="StudentEmail">Please enter the email address of the student</label>
          <input type="email" id="StudentEmail" name="StudentEmail" placeholder="example@email.com" required>
          <label for="ClassID">Which class would you like to add them to?</label>
+         <!-- Creating a select element with the user's classes as the options
+         this prevents the user form entering the name of a class that does not exist -->
          <select name="ClassID" id="ClassID">
             <?php
-            // Get and store all of the users sets
+            // Get and store all of the users classes
             $sql = $conn->prepare("SELECT ClassID, ClassName FROM classinfo WHERE ClassTeacher = ?");
             $sql->bind_param('i', $GetUserID);
             $sql->execute();

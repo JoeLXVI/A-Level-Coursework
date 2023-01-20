@@ -38,6 +38,7 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
                }
             }
             ?>
+            <!-- Seperating the navigation buttons that will be pushed to the right hand side of the page -->
             <div class="shiftRight">
                <li id="increaseText"><a href="#">Increase Font Size</a></li>
                <li id="decreaseText"><a href="#">Decrease Font Size</a></li>
@@ -67,6 +68,8 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
             $GetClassSubject = $_POST['ClassSubject'];
             // Generate a 7 character class code
             $CreateClassCode = substr(str_shuffle("0123456789abcdefghijklmnopqrstuvwxyz"), 0, 7);
+            // This try catch block acts to catch any duplicate class codes that are generated
+            // It handles this error by generating a new class code when there is a duplicate error
             try {
                $sql_CreateClass = $conn->prepare("INSERT INTO classinfo (ClassTeacher, ClassName, ClassSubject, ClassCode) VALUES (?, ?, ?, ?)");
                $sql_CreateClass->bind_param('isss', $GetUserID, $GetClassName, $GetClassSubject, $CreateClassCode);

@@ -77,6 +77,7 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
          <div id="CreateFlashcard-CardSet">
             <label for="CardSet">Which set would you like to add the card to?</label>
             <br>
+            <!-- Creating a select input so that users cannot input the name of a set that does not exist in the database -->
             <select name="CardSet" id="CardSet">
                <?php
                // Get and store all of the users sets
@@ -101,7 +102,8 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
          </div>
          <div id="CreateFlashcard-TeacherClasses">
             <?php
-            // PHP to allow teachers to see their classes
+            // PHP to allow teachers to see their classes by creating a select element, containing their classes as the options
+            // This element is only show if the account type logged in is a teacher or admin
             $sql_GetAccountType = $conn->prepare("SELECT UserType FROM users WHERE UserID = ?");
             $sql_GetAccountType->bind_param('i', $GetUserID);
             $sql_GetAccountType->execute();
@@ -121,7 +123,7 @@ $GetUserID = $_GET['uid']; // Using the GET method to retrieve form the URL
                      $resultRows = $sql->num_rows();
                      if ($resultRows > 0) {
                         while ($sql->fetch()) { // Fetch the results of the query
-                           // Put the user's sets as options in the '<select>' element
+                           // Put the user's classes as options in the '<select>' element
                            echo "<option value='" . $ClassCard . "'>" . $ClassName . "</option>";
                         }
                      }
