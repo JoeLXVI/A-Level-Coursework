@@ -114,15 +114,15 @@ require 'PHPMailer\src\SMTP.php';
                echo "Mailer Error: " . $mail->ErrorInfo;
             }
             // Get the user ID to pass to the validation code page
-            $sql = $conn->prepare("SELECT UserID, UserPassword FROM users WHERE UserName = ?");
+            $sql = $conn->prepare("SELECT UserID, UserPassword, UserType FROM users WHERE UserName = ?");
             $sql->bind_param('s', $GetUserName);
             $sql->execute();
             $sql->store_result();
-            $sql->bind_result($UserID, $StoredPassword);
+            $sql->bind_result($UserID, $StoredPassword, $UserType);
             $resultRows = $sql->num_rows();
             if ($resultRows > 0) {
                while ($sql->fetch()) { // Fetch the results of the query
-                  $URL = "validateAccount.php?uid=$UserID";
+                  $URL = "validateAccount.php?uid=$UserID&aty=$UserType";
                   echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
                   // If JavaScript is not enabled this performs the same function
                   echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';

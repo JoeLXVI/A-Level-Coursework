@@ -19,7 +19,6 @@ include "conn.php";
             <li><a href="selectSet.php">Select a Set</a></li>
             <li><a href="createFlashcard.php">Create a Card</a></li>
             <div class="shiftRight">
-               <li class="active"><a href="signIn.php">Sign In </a></li>
                <li id="increaseText"><a href="#">Increase Font Size</a></li>
                <li id="decreaseText"><a href="#">Decrease Font Size</a></li>
                <li id="themeToggle"><a href="#">Toggle Theme</a></li>
@@ -57,13 +56,24 @@ include "conn.php";
             while ($sql->fetch()) { // Fetch the results of the query
                // Check if the inputted password matches the stored hash
                if (password_verify($GetUserPassword, $StoredPassword)) {
-                  // Redirect the user using JavaScript
-                  $URL = "selectSet.php?uid=$UserID";
-                  echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
-                  // If JavaScript is not enabled this performs the same function
-                  echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
-               } else {
-                  echo "Incorrect Name and Password Combination";
+                  // PHP to give teachers access to the pages relating to the creation of classes as well as inviting students to classes
+                  $sql_GetAccountType = $conn->prepare("SELECT UserType FROM users WHERE UserID = ?");
+                  $sql_GetAccountType->bind_param('i', $GetUserID);
+                  $sql_GetAccountType->execute();
+                  $sql_GetAccountType->store_result();
+                  $sql_GetAccountType->bind_result($UserType);
+                  $resultRows = $sql_GetAccountType->num_rows();
+                  if ($resultRows > 0) {
+                     while ($sql_GetAccountType->fetch()) { // Fetch the results of the query
+                        // Redirect the user using JavaScript
+                        $URL = "selectSet.php?uid=$UserID&aty=$UserType";
+                        echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
+                        // If JavaScript is not enabled this performs the same function
+                        echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
+                     }
+                  } else {
+                     echo "Incorrect Name and Password Combination";
+                  }
                }
             }
          }
