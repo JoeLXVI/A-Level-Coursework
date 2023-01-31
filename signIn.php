@@ -46,34 +46,29 @@ include "conn.php";
          $GetUserName = $_POST['UserName'];
          $GetUserPassword = $_POST['UserPassword'];
          // Search for the user in the database
-         $sql = $conn->prepare("SELECT UserID, UserPassword FROM users WHERE UserName = ?");
+         $sql = $conn->prepare("SELECT UserID, UserPassword, UserType, Validated FROM users WHERE UserName = ?");
          $sql->bind_param('s', $GetUserName);
          $sql->execute();
          $sql->store_result();
-         $sql->bind_result($UserID, $StoredPassword);
+         $sql->bind_result($UserID, $StoredPassword, $UserType, $Validated);
          $resultRows = $sql->num_rows();
          if ($resultRows > 0) {
             while ($sql->fetch()) { // Fetch the results of the query
-               // Check if the inputted password matches the stored hash
-               if (password_verify($GetUserPassword, $StoredPassword)) {
-                  // PHP to give teachers access to the pages relating to the creation of classes as well as inviting students to classes
-                  $sql_GetAccountType = $conn->prepare("SELECT UserType FROM users WHERE UserID = ?");
-                  $sql_GetAccountType->bind_param('i', $GetUserID);
-                  $sql_GetAccountType->execute();
-                  $sql_GetAccountType->store_result();
-                  $sql_GetAccountType->bind_result($UserType);
-                  $resultRows = $sql_GetAccountType->num_rows();
-                  if ($resultRows > 0) {
-                     while ($sql_GetAccountType->fetch()) { // Fetch the results of the query
-                        // Redirect the user using JavaScript
-                        $URL = "selectSet.php?uid=$UserID&aty=$UserType";
-                        echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
-                        // If JavaScript is not enabled this performs the same function
-                        echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
-                     }
+               if ($Validated === '1') {
+                  // Check if the inputted password matches the stored hash
+                  if (password_verify($GetUserPassword, $StoredPassword)) {
+                     // Redirect the user using JavaScript
+                     $URL = "selectSet.php?uid=$UserID&aty=$UserType";
+                     echo "<script type='text/javascript'>document.location.href='{$URL}';</script>";
+                     // If JavaScript is not enabled this performs the same function
+                     echo '<META HTTP-EQUIV="refresh" content="0;URL=' . $URL . '">';
                   } else {
                      echo "Incorrect Name and Password Combination";
+                     exit;
                   }
+               } else {
+                  echo "Account Not Validated";
+                  exit;
                }
             }
          }
